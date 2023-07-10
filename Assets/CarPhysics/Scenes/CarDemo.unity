@@ -427,6 +427,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1064604255}
+  - component: {fileID: 1064604256}
   m_Layer: 0
   m_Name: WheelRR
   m_TagString: Untagged
@@ -442,13 +443,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1064604254}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2, y: 0.04, z: -1.25}
+  m_LocalPosition: {x: 1.4, y: -0.17, z: -1.25}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1093328819}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1064604256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064604254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6081ae88696fef4eb1ab08018e76be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 1093328820}
+  _maxLength: 0
 --- !u!1 &1093328818
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,6 +474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1093328819}
   - component: {fileID: 1093328820}
+  - component: {fileID: 1093328821}
   m_Layer: 0
   m_Name: Car
   m_TagString: Untagged
@@ -514,6 +530,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1093328821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093328818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d4aeb8dad4103240bc488604d0d5ab9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tiers:
+  - {fileID: 2027057014}
+  - {fileID: 1157088546}
+  - {fileID: 1765807511}
+  - {fileID: 1064604255}
+  tierMass: 6.8
+  tierGripFactor: 0.5
+  restLength: 1
+  springTravel: 0.5
+  springStrength: 30000
+  springDamper: 4000
 --- !u!1 &1157088545
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,6 +562,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1157088546}
+  - component: {fileID: 1157088547}
   m_Layer: 0
   m_Name: WheelFR
   m_TagString: Untagged
@@ -538,13 +578,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1157088545}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2, y: 0.04, z: 1.2}
+  m_LocalPosition: {x: 1.4, y: -0.17, z: 1.2}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1093328819}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1157088547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157088545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6081ae88696fef4eb1ab08018e76be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 1093328820}
+  _maxLength: 0
 --- !u!1 &1221565198
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +831,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1765807511}
+  - component: {fileID: 1765807512}
   m_Layer: 0
   m_Name: WheelRL
   m_TagString: Untagged
@@ -792,13 +847,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1765807510}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.2, y: 0.04, z: -1.25}
+  m_LocalPosition: {x: -1.4, y: -0.17, z: -1.25}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1093328819}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1765807512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765807510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6081ae88696fef4eb1ab08018e76be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 1093328820}
+  _maxLength: 0
 --- !u!1 &2019018976
 GameObject:
   m_ObjectHideFlags: 0
@@ -945,6 +1014,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2027057014}
+  - component: {fileID: 2027057015}
   m_Layer: 0
   m_Name: WheelFL
   m_TagString: Untagged
@@ -960,10 +1030,24 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2027057013}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.2, y: 0.04, z: 1.2}
+  m_LocalPosition: {x: -1.4, y: -0.17, z: 1.2}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1093328819}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2027057015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027057013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6081ae88696fef4eb1ab08018e76be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 1093328820}
+  _maxLength: 0
