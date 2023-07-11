@@ -372,12 +372,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerOfMass: {fileID: 4909340588462241515}
-  turnSpeed: 20
+  turnSpeed: 4
   forwardForce: 250
   breakForce: 200
   regularFrictionForce: 40
   maxSteer: 45
-  maxSpeed: 9
+  maxSpeed: 15
   powerCurve:
     serializedVersion: 2
     m_Curve:
