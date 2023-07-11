@@ -9,6 +9,7 @@ namespace CarPhysics
         [SerializeField] private float steerValue;
         [SerializeField] private float forwardForce;
         [SerializeField] private float breakForce;
+        [SerializeField] private float regularFrictionForce;
         [SerializeField] private float maxSpeed;
         [SerializeField] private AnimationCurve powerCurve;
         [Header("Tires")]
@@ -55,7 +56,7 @@ namespace CarPhysics
                     float offset = restLength - hit.distance;
                     float vel = Vector3.Dot(tier.up, tireWorldVel);
                     float force = (offset * springStrength) - (vel * springDamper);
-                    _rb.AddForceAtPosition(tier.up * force, tier.position);
+                    _rb.AddForceAtPosition(tier.up * force, hit.point);
 
                     //Steering
                     // apply rotation on forward tiers.
@@ -68,25 +69,29 @@ namespace CarPhysics
                     float steeringVel = Vector3.Dot(tier.right, tireWorldVel);
                     float desiredVelChange = -steeringVel * tierGripFactor;
                     float desireAccel = desiredVelChange / Time.fixedDeltaTime;
-                    _rb.AddForceAtPosition(tier.right * tierMass * desireAccel, tier.position);
+                    _rb.AddForceAtPosition(tier.right * tierMass * desireAccel, hit.point);
 
                     //Accelaration and break
                     if (IsForwardTiers(i))
                     {
-                        if (_forwardMove > 0.1f)
+                        if (_forwardMove >= 0.1f)
                         {
                             float carSpeed = Vector3.Dot(transform.forward, _rb.velocity);
                             float normalizedSpeed = Mathf.Clamp01(Mathf.Abs(carSpeed) / maxSpeed);
                             float availableTorque = powerCurve.Evaluate(normalizedSpeed) * _forwardMove * forwardForce;
-                            _rb.AddForceAtPosition(tier.forward * availableTorque, tier.position);
+                            _rb.AddForceAtPosition(tier.forward * availableTorque, hit.point);
                         }
-                        else if (_forwardMove < -0.1f)
+                        else if (_forwardMove <= -0.1f)
                         {
-                            _rb.AddForceAtPosition(-tier.forward * breakForce, tier.position);
+                            _rb.AddForceAtPosition(-tier.forward * breakForce, hit.point);
                         }
-                        else
-                        {
-                        }
+                    }
+
+                    // No input Friction
+                    if (_forwardMove > -.1f && _forwardMove < .1f)
+                    {
+                        float carSpeed = Vector3.Dot(transform.forward, _rb.velocity);
+                        _rb.AddForceAtPosition(tier.forward * -Mathf.Sign(carSpeed) * regularFrictionForce, hit.point);
                     }
                 }
             }
