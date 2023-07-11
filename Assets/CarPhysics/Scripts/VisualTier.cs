@@ -14,7 +14,7 @@ namespace CarPhysics
 
         private void Update()
         {
-            transform.rotation = Quaternion.Euler(0f, _offset + tier.eulerAngles.y, 0f);
+            transform.rotation = Quaternion.Euler(0f, _offset + tier.localEulerAngles.y, 0f);
         }
     }
 }
