@@ -377,7 +377,7 @@ MonoBehaviour:
   breakForce: 200
   regularFrictionForce: 40
   maxSteer: 45
-  maxSpeed: 15
+  maxSpeed: 10
   powerCurve:
     serializedVersion: 2
     m_Curve:
