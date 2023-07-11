@@ -421,12 +421,15 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   tiers:
-  - {fileID: 3089424825984940296}
-  - {fileID: 131922821786475959}
-  - {fileID: 5875133243462367719}
-  - {fileID: 3682009543074169794}
+  - transform: {fileID: 3089424825984940296}
+    gripFactor: 0.6
+  - transform: {fileID: 131922821786475959}
+    gripFactor: 0.6
+  - transform: {fileID: 5875133243462367719}
+    gripFactor: 0.5
+  - transform: {fileID: 3682009543074169794}
+    gripFactor: 0.5
   tierMass: 2
-  tierGripFactor: 0.5
   restLength: 0.8
   springStrength: 900
   springDamper: 120

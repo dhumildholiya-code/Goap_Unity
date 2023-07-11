@@ -3,6 +3,13 @@ using UnityEngine;
 
 namespace CarPhysics
 {
+    [System.Serializable]
+    public struct Tier
+    {
+        public Transform transform;
+        [Range(0f, 1f)]
+        public float gripFactor;
+    }
     public class CarController : MonoBehaviour
     {
         [SerializeField] private Transform centerOfMass;
@@ -15,9 +22,8 @@ namespace CarPhysics
         [SerializeField] private float maxSpeed;
         [SerializeField] private AnimationCurve powerCurve;
         [Header("Tires")]
-        [SerializeField] private Transform[] tiers;
+        [SerializeField] private Tier[] tiers;
         public float tierMass;
-        [Range(0f, 1f)] public float tierGripFactor;
         [Header("Suspension")]
         public float restLength = 1f;
         public float springStrength = 30000f;
@@ -50,21 +56,21 @@ namespace CarPhysics
         {
             for (int i = 0; i < tiers.Length; i++)
             {
-                Transform tier = tiers[i];
+                Transform tierTransform = tiers[i].transform;
 
 
-                Debug.DrawRay(tier.position, -tier.up * restLength, Color.red);
-                if (Physics.Raycast(tier.position, -tier.up, out RaycastHit hit, restLength))
+                Debug.DrawRay(tierTransform.position, -tierTransform.up * restLength, Color.red);
+                if (Physics.Raycast(tierTransform.position, -tierTransform.up, out RaycastHit hit, restLength))
                 {
                     _isGrounded = true;
-                    Debug.DrawLine(tier.position, hit.point, Color.green);
+                    Debug.DrawLine(tierTransform.position, hit.point, Color.green);
 
                     // Suspension
-                    Vector3 tireWorldVel = _rb.GetPointVelocity(tier.position);
+                    Vector3 tireWorldVel = _rb.GetPointVelocity(tierTransform.position);
                     float offset = restLength - hit.distance;
-                    float vel = Vector3.Dot(tier.up, tireWorldVel);
+                    float vel = Vector3.Dot(tierTransform.up, tireWorldVel);
                     float force = (offset * springStrength) - (vel * springDamper);
-                    _rb.AddForceAtPosition(tier.up * force, hit.point);
+                    _rb.AddForceAtPosition(tierTransform.up * force, hit.point);
 
                     //Steering
                     // apply rotation on forward tiers.
@@ -72,13 +78,13 @@ namespace CarPhysics
                     {
                         float targetAngle = _turnValue * maxSteer;
                         _angle = Mathf.Lerp(_angle, targetAngle, Time.fixedDeltaTime * turnSpeed);
-                        tier.localEulerAngles = new Vector3(0f, _angle, 0f);
+                        tierTransform.localEulerAngles = new Vector3(0f, _angle, 0f);
                     }
-                    tireWorldVel = _rb.GetPointVelocity(tier.position);
-                    float steeringVel = Vector3.Dot(tier.right, tireWorldVel);
-                    float desiredVelChange = -steeringVel * tierGripFactor;
+                    tireWorldVel = _rb.GetPointVelocity(tierTransform.position);
+                    float steeringVel = Vector3.Dot(tierTransform.right, tireWorldVel);
+                    float desiredVelChange = -steeringVel * tiers[i].gripFactor;
                     float desireAccel = desiredVelChange / Time.fixedDeltaTime;
-                    _rb.AddForceAtPosition(tier.right * tierMass * desireAccel, hit.point);
+                    _rb.AddForceAtPosition(tierTransform.right * tierMass * desireAccel, hit.point);
 
                     //Accelaration and break
                     if (IsForwardTiers(i))
@@ -88,11 +94,11 @@ namespace CarPhysics
                             float carSpeed = Vector3.Dot(transform.forward, _rb.velocity);
                             float normalizedSpeed = Mathf.Clamp01(Mathf.Abs(carSpeed) / maxSpeed);
                             float availableTorque = powerCurve.Evaluate(normalizedSpeed) * _forwardMove * forwardForce;
-                            _rb.AddForceAtPosition(tier.forward * availableTorque, hit.point);
+                            _rb.AddForceAtPosition(tierTransform.forward * availableTorque, hit.point);
                         }
                         else if (_forwardMove <= -0.1f)
                         {
-                            _rb.AddForceAtPosition(-tier.forward * breakForce, hit.point);
+                            _rb.AddForceAtPosition(-tierTransform.forward * breakForce, hit.point);
                         }
                     }
 
@@ -100,7 +106,7 @@ namespace CarPhysics
                     if (_forwardMove > -.1f && _forwardMove < .1f)
                     {
                         float carSpeed = Vector3.Dot(transform.forward, _rb.velocity);
-                        _rb.AddForceAtPosition(tier.forward * -Mathf.Sign(carSpeed) * regularFrictionForce, hit.point);
+                        _rb.AddForceAtPosition(tierTransform.forward * -Mathf.Sign(carSpeed) * regularFrictionForce, hit.point);
                     }
                 }
                 else
