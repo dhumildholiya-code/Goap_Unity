@@ -29,6 +29,11 @@ namespace CarPhysics
         public float springStrength = 30000f;
         public float springDamper = 4000f;
 
+        [Header("Effects")]
+        [SerializeField] private float skidThreshold;
+        [SerializeField] private TrailRenderer leftTrail;
+        [SerializeField] private TrailRenderer rightTrail;
+
         private Rigidbody _rb;
 
         private bool _isGrounded;
@@ -66,7 +71,7 @@ namespace CarPhysics
                     Debug.DrawLine(tierTransform.position, hit.point, Color.green);
 
                     // Suspension
-                    Vector3 tireWorldVel = _rb.GetPointVelocity(tierTransform.position);
+                    Vector3 tireWorldVel = _rb.GetPointVelocity(hit.point);
                     float offset = restLength - hit.distance;
                     float vel = Vector3.Dot(tierTransform.up, tireWorldVel);
                     float force = (offset * springStrength) - (vel * springDamper);
@@ -85,6 +90,11 @@ namespace CarPhysics
                     float desiredVelChange = -steeringVel * tiers[i].gripFactor;
                     float desireAccel = desiredVelChange / Time.fixedDeltaTime;
                     _rb.AddForceAtPosition(tierTransform.right * tierMass * desireAccel, hit.point);
+
+                    // Skidding
+                    bool isSkidding = Mathf.Abs(steeringVel) > skidThreshold;
+                    leftTrail.emitting = isSkidding;
+                    rightTrail.emitting = isSkidding;
 
                     //Accelaration and break
                     if (IsForwardTiers(i))
