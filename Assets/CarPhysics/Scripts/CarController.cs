@@ -5,11 +5,13 @@ namespace CarPhysics
 {
     public class CarController : MonoBehaviour
     {
+        [SerializeField] private Transform centerOfMass;
         [Header("Movement")]
-        [SerializeField] private float steerValue;
+        [SerializeField] private float turnSpeed;
         [SerializeField] private float forwardForce;
         [SerializeField] private float breakForce;
         [SerializeField] private float regularFrictionForce;
+        [SerializeField] private float maxSteer;
         [SerializeField] private float maxSpeed;
         [SerializeField] private AnimationCurve powerCurve;
         [Header("Tires")]
@@ -18,18 +20,24 @@ namespace CarPhysics
         [Range(0f, 1f)] public float tierGripFactor;
         [Header("Suspension")]
         public float restLength = 1f;
-        public float springTravel = .5f;
         public float springStrength = 30000f;
         public float springDamper = 4000f;
 
         private Rigidbody _rb;
 
+        private bool _isGrounded;
         private float _forwardMove;
         private float _turnValue;
+        private float _angle;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
+        }
+        private void Start()
+        {
+            _angle = 0f;
+            _rb.centerOfMass = centerOfMass.localPosition;
         }
 
         private void Update()
@@ -40,15 +48,15 @@ namespace CarPhysics
 
         private void FixedUpdate()
         {
-            float maxLength = restLength + springTravel;
             for (int i = 0; i < tiers.Length; i++)
             {
                 Transform tier = tiers[i];
 
 
-                Debug.DrawRay(tier.position, -tier.up * maxLength, Color.red);
-                if (Physics.Raycast(tier.position, -tier.up, out RaycastHit hit, maxLength))
+                Debug.DrawRay(tier.position, -tier.up * restLength, Color.red);
+                if (Physics.Raycast(tier.position, -tier.up, out RaycastHit hit, restLength))
                 {
+                    _isGrounded = true;
                     Debug.DrawLine(tier.position, hit.point, Color.green);
 
                     // Suspension
@@ -62,8 +70,9 @@ namespace CarPhysics
                     // apply rotation on forward tiers.
                     if (IsForwardTiers(i))
                     {
-                        Quaternion targetRot = transform.rotation * Quaternion.Euler(Vector3.up * _turnValue * steerValue);
-                        tier.rotation = Quaternion.Lerp(tier.rotation, targetRot, Time.fixedDeltaTime * 10f);
+                        float targetAngle = _turnValue * maxSteer;
+                        _angle = Mathf.Lerp(_angle, targetAngle, Time.fixedDeltaTime * turnSpeed);
+                        tier.localEulerAngles = new Vector3(0f, _angle, 0f);
                     }
                     tireWorldVel = _rb.GetPointVelocity(tier.position);
                     float steeringVel = Vector3.Dot(tier.right, tireWorldVel);
@@ -94,6 +103,14 @@ namespace CarPhysics
                         _rb.AddForceAtPosition(tier.forward * -Mathf.Sign(carSpeed) * regularFrictionForce, hit.point);
                     }
                 }
+                else
+                {
+                    _isGrounded = false;
+                }
+            }
+
+            if (!_isGrounded)
+            {
             }
         }
 
