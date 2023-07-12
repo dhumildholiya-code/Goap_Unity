@@ -5,48 +5,54 @@ namespace Goap
 {
     public abstract class GoapAction : MonoBehaviour
     {
-        private Dictionary<string, Object> _preconditions;
-        public Dictionary<string, Object> Preconditions => _preconditions;
+        public float cost = 1f;
+        public GameObject target = null;
 
-        private Dictionary<string, Object> _effects;
-        public Dictionary<string, Object> Effects => _effects;
+        private Dictionary<string, object> _preCondition;
+        public Dictionary<string, object> PreCondition => _preCondition;
+        private Dictionary<string, object> _effects;
+        public Dictionary<string, object> Effects => _effects;
 
         private bool _inRange = false;
-        public bool IsInRange
+        public bool InRange
         {
             get => _inRange;
             set => _inRange = value;
         }
 
-        public float cost = 1f;
-        public GameObject target;
-
-        public GoapAction()
-        {
-            _preconditions = new Dictionary<string, Object>();
-            _effects = new Dictionary<string, Object>(); 
-        }
-
         public abstract void Reset();
         public abstract bool IsDone();
-        public abstract bool CheckProceduralPrecondition(GameObject agent);
-        public abstract bool Perform(GameObject agent);
-        public abstract bool RequiresRange();
+        public abstract bool CheckProceduralPreCondition(GameObject agent);
+        public abstract bool RequiresInRange();
 
-        public void AddPrecondition(string key, Object value)
+        public void DoReset()
         {
-            _preconditions.Add(key, value);
+            _inRange = false;
+            target = null;
+            Reset();
         }
-        public void RemovePrecondition(string key)
+
+        public void AddPreCondition(string key, object value)
         {
-            if(_preconditions.ContainsKey(key))
+            if (!_preCondition.ContainsKey(key))
             {
-                _preconditions.Remove(key);
+                _preCondition.Add(key, value);
             }
         }
-        public void AddEffect(string key, Object value)
+        public void RemovePreCondition(string key)
         {
-            _effects.Add(key, value);
+            if (_preCondition.ContainsKey(key))
+            {
+                _preCondition.Remove(key);
+            }
+        }
+
+        public void AddEffect(string key, object value)
+        {
+            if (!_effects.ContainsKey(key))
+            {
+                _effects.Add(key, value);
+            }
         }
         public void RemoveEffect(string key)
         {
@@ -54,13 +60,6 @@ namespace Goap
             {
                 _effects.Remove(key);
             }
-        }
-
-        public void DoReset()
-        {
-            _inRange = false;
-            target = null;
-            Reset();
         }
     }
 }
