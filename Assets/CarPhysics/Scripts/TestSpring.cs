@@ -37,7 +37,7 @@ public class TestSpring : MonoBehaviour
 
         float value = _spring.Evaluate(Time.deltaTime);
 
-        transform.position = _startPosition + Vector3.right * value * strength + Vector3.up * value * strength;
+        transform.position = _startPosition + Vector3.right * value * strength;
         transform.localScale = _startScale + Vector3.one * Mathf.Abs(value) * strength;
     }
 }
